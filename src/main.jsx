@@ -23,7 +23,12 @@ const colors = {
   }
 }
 
-const theme = extendTheme({ colors })
+const theme = extendTheme({ colors ,
+  fonts: {
+    heading: `'Press Start 2P', sans-serif`,
+    body: `'Press Start 2P', sans-serif`,
+  },
+})
 
 
 createRoot(document.getElementById('root')).render(
