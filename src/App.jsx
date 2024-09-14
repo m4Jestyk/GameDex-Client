@@ -5,6 +5,8 @@ import Category from "./pages/Category"
 import Developer from "./pages/Developer"
 import Games from "./pages/Games"
 import Franchise from "./pages/Franchise"
+import Genre from "./pages/Genre"
+import Retro from "./pages/Retro"
 
 
 function App() {
@@ -18,6 +20,9 @@ function App() {
                     <Route path="/category/developer/result" element={<Games/>}/>
               <Route path="/category/franchise" element={<Franchise />} />
                     <Route path="/category/franchise/result" element={<Games/>}/>
+              <Route path="/category/genre" element={<Genre />} />
+                    <Route path="/category/genre/result" element={<Games/>}/>
+              <Route path="/category/retro" element={<Retro/>}/>
       </Routes>
     </BrowserRouter>
   )

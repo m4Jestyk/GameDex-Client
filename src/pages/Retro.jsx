@@ -5,85 +5,33 @@ import Game from '../components/Game';
 import { PacmanLoader } from 'react-spinners';
 import { Box, Heading, Text, Flex, Grid, GridItem, useColorModeValue } from '@chakra-ui/react';
 
-const Games = () => {
-  const name = useSelector((state) => state.game.name);
-  const genre = useSelector((state) => state.game.genre);
-  const developer = useSelector((state) => state.game.developer);
+const Retro = () => {
+
   const toFind = useSelector((state) => state.find.toFind);
   
   const [loading, setLoading] = useState(false);
   const [games, setGames] = useState([]);
 
-  const fetchGamesByDev = async () => {
+  const fetchRetro = async() => {
     setLoading(true);
-
-    const minLoadingTime = new Promise((resolve) => setTimeout(resolve, 1000));
-
     try {
-      const devResponse = await axios.get(`http://localhost:8080/api/v1/games?developer=${developer}`);
-      const devGames = devResponse.data;
+        
+        const res = await axios.get("http://localhost:8080/api/v1/games/retro");
+        const data = res.data;
+        setGames([...data]);
 
-      const prodResponse = await axios.get(`http://localhost:8080/api/v1/games?producer=${developer}`);
-      const prodGames = prodResponse.data;
-
-      await minLoadingTime;
-      setGames([...devGames, ...prodGames]);
-
-      console.log('Combined Games:', [...devGames, ...prodGames]);
     } catch (error) {
-      console.error('Error fetching games:', error);
-    } finally {
-      setLoading(false);
+        console.log("Error while fetching games : ", error);
+    } finally{
+        setLoading(false);
     }
-  };
+  }
 
-  const fetchGamesByName = async () => {
-    setLoading(true);
-    console.log(name);
-
-    const minLoadingTime = new Promise((resolve) => setTimeout(resolve, 1000));
-
-    try {
-      const devResponse = await axios.get(`http://localhost:8080/api/v1/games?name=${name}`);
-      const devGames = devResponse.data;
-
-      setGames([...devGames]);
-    } catch (error) {
-      console.error('Error fetching games:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const fetchGamesByGenre = async () => {
-    setLoading(true);
-    console.log(name);
-
-    const minLoadingTime = new Promise((resolve) => setTimeout(resolve, 1000));
-
-    try {
-      const devResponse = await axios.get(`http://localhost:8080/api/v1/games?genre=${genre}`);
-      const devGames = devResponse.data;
-
-      setGames([...devGames]);
-    } catch (error) {
-      console.error('Error fetching games:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  
 
   useEffect(() => {
-    if (developer && toFind == "dev") {
-      fetchGamesByDev();
-    } else if(toFind == "name")
-    {
-      fetchGamesByName();
-    } else if(toFind == "genre")
-    {
-      fetchGamesByGenre();
-    }
-  }, [developer]);
+    fetchRetro();
+  }, []);
 
   const bgGradient = useColorModeValue('linear(to-r, gray.200, gray.300)', 'linear(to-r, gray.800, gray.900)');
   const cardBg = useColorModeValue('gray.100', 'gray.700');
@@ -127,4 +75,4 @@ const Games = () => {
   );
 };
 
-export default Games;
+export default Retro;
