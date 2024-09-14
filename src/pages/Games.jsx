@@ -6,12 +6,14 @@ import { PacmanLoader } from 'react-spinners';
 import { Box, Heading, Text, Flex, Grid, GridItem, useColorModeValue } from '@chakra-ui/react';
 
 const Games = () => {
+  const name = useSelector((state) => state.game.name)
   const developer = useSelector((state) => state.game.developer);
+  const toFind = useSelector((state) => state.find.toFind);
   
   const [loading, setLoading] = useState(false);
   const [games, setGames] = useState([]);
 
-  const fetchGames = async () => {
+  const fetchGamesByDev = async () => {
     setLoading(true);
 
     const minLoadingTime = new Promise((resolve) => setTimeout(resolve, 1000));
@@ -34,13 +36,33 @@ const Games = () => {
     }
   };
 
+  const fetchGamesByName = async () => {
+    setLoading(true);
+    console.log(name);
+
+    const minLoadingTime = new Promise((resolve) => setTimeout(resolve, 1000));
+
+    try {
+      const devResponse = await axios.get(`http://localhost:8080/api/v1/games?name=${name}`);
+      const devGames = devResponse.data;
+
+      setGames([...devGames]);
+    } catch (error) {
+      console.error('Error fetching games:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    if (developer) {
-      fetchGames();
+    if (developer && toFind == "dev") {
+      fetchGamesByDev();
+    } else if(toFind == "name")
+    {
+      fetchGamesByName();
     }
   }, [developer]);
 
-  // Dynamic styling based on light/dark mode
   const bgGradient = useColorModeValue('linear(to-r, gray.200, gray.300)', 'linear(to-r, gray.800, gray.900)');
   const cardBg = useColorModeValue('gray.100', 'gray.700');
   const textColor = useColorModeValue('black', 'white');
