@@ -8,6 +8,7 @@ import Franchise from "./pages/Franchise"
 import Genre from "./pages/Genre"
 import Retro from "./pages/Retro"
 import Custom from "./pages/Custom"
+import GameManager from "./pages/GameManager"
 
 
 function App() {
@@ -25,6 +26,7 @@ function App() {
                     <Route path="/category/genre/result" element={<Games/>}/>
               <Route path="/category/retro" element={<Retro/>}/>
               <Route path="/category/customfind" element={<Custom/>}/>
+              <Route path="/manager" element={<GameManager/>}/>
       </Routes>
     </BrowserRouter>
   )
