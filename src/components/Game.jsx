@@ -3,8 +3,7 @@ import React from 'react';
 import '@fontsource/press-start-2p'; // Import the retro game font
 
 const Game = (props) => {
-  // Colors for light and dark modes
-  const cardBg = useColorModeValue('linear-gradient(135deg, #2a2a72, #009ffd)', 'linear-gradient(135deg, #1f1c2c, #928dab)');
+  const cardBg = useColorModeValue('linear-gradient(135deg, #1e1e1e, #444444)', 'linear-gradient(135deg, #1f1c2c, #928dab)');
   const neonTextColor = useColorModeValue('#FF6EC7', '#0FF0FC');
   const subheadingColor = useColorModeValue('rgba(255, 255, 255, 0.6)', 'rgba(255, 255, 255, 0.8)');
   
@@ -13,7 +12,7 @@ const Game = (props) => {
       bg={cardBg} 
       p={8} 
       borderRadius="lg" 
-      boxShadow="0 0 20px rgba(0, 255, 255, 0.7)"  // Neon glow effect
+      boxShadow="0 0 20px rgba(0, 255, 255, 0.7)" 
       maxW="80vw" 
       mx="auto" 
       mb={8} 
@@ -30,10 +29,10 @@ const Game = (props) => {
         <Stack spacing={3} textAlign={{ base: 'left', md: 'center' }} flex="1">
           <Text 
             as="h1" 
-            fontSize="2xl"  // Larger font size
-            fontWeight="extrabold"  // Bolder weight
-            textDecoration="underline"  // Underline the text
-            textShadow="0px 0px 8px #FF6EC7"  // Neon shadow effect
+            fontSize="2xl"  
+            fontWeight="extrabold"  
+            textDecoration="underline" 
+            textShadow="0px 0px 8px #FF6EC7"
           >
             {props.name}
           </Text>

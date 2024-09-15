@@ -49,7 +49,7 @@ export default function DevCard(props) {
             pos: 'absolute',
             top: 5,
             left: 0,
-            backgroundImage: `url(${props.image})`,
+            backgroundImage: `{props.image}`,
             filter: 'blur(15px)',
             zIndex: -1,
           }}

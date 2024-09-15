@@ -7,6 +7,7 @@ import Games from "./pages/Games"
 import Franchise from "./pages/Franchise"
 import Genre from "./pages/Genre"
 import Retro from "./pages/Retro"
+import Custom from "./pages/Custom"
 
 
 function App() {
@@ -23,6 +24,7 @@ function App() {
               <Route path="/category/genre" element={<Genre />} />
                     <Route path="/category/genre/result" element={<Games/>}/>
               <Route path="/category/retro" element={<Retro/>}/>
+              <Route path="/category/customfind" element={<Custom/>}/>
       </Routes>
     </BrowserRouter>
   )

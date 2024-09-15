@@ -4,7 +4,6 @@ import {
   Box,
   Flex,
   Avatar,
-  Text,
   Button,
   Menu,
   MenuButton,
@@ -16,40 +15,20 @@ import {
   Stack,
   useColorMode,
   Center,
-} from '@chakra-ui/react'
-import { MoonIcon, SunIcon } from '@chakra-ui/icons'
-
-// interface Props {
-//   children: React.ReactNode
-// }
-
-const NavLink = () => {
-  // const { children } = props
-
-  return (
-    <Box
-      as="a"
-      px={2}
-      py={1}
-      rounded={'md'}
-      _hover={{
-        textDecoration: 'none',
-        bg: useColorModeValue('gray.200', 'gray.700'),
-      }}
-      href={'#'}>
-      {/* {children} */}
-    </Box>
-  )
-}
+} from '@chakra-ui/react';
+import { MoonIcon, SunIcon } from '@chakra-ui/icons';
+import { useNavigate } from 'react-router-dom';
 
 export default function Navbar() {
-  const { colorMode, toggleColorMode } = useColorMode()
-  const { isOpen, onOpen, onClose } = useDisclosure()
+  const { colorMode, toggleColorMode } = useColorMode();
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const navigate = useNavigate();
+
   return (
     <>
       <Box bg={useColorModeValue('gray.100', 'gray.900')} px={4}>
         <Flex h={16} alignItems={'center'} justifyContent={'space-between'}>
-          <Box cursor={'pointer'}>GameDex</Box>
+          <Box onClick={() => navigate("/")} cursor={'pointer'}>GameDex</Box>
 
           <Flex alignItems={'center'}>
             <Stack direction={'row'} spacing={7}>
@@ -93,5 +72,5 @@ export default function Navbar() {
         </Flex>
       </Box>
     </>
-  )
+  );
 }
