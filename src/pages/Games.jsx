@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import Game from '../components/Game';
 import { PacmanLoader } from 'react-spinners';
 import { Box, Heading, Text, Flex, Grid, GridItem, useColorModeValue } from '@chakra-ui/react';
-
+ 
 const Games = () => {
   const name = useSelector((state) => state.game.name);
   const genre = useSelector((state) => state.game.genre);
@@ -20,10 +20,10 @@ const Games = () => {
     const minLoadingTime = new Promise((resolve) => setTimeout(resolve, 1000));
 
     try {
-      const devResponse = await axios.get(`http://localhost:8080/api/v1/games?developer=${developer}`);
+      const devResponse = await axios.get(`${import.meta.env.VITE_SERVER}?developer=${developer}`);
       const devGames = devResponse.data;
 
-      const prodResponse = await axios.get(`http://localhost:8080/api/v1/games?producer=${developer}`);
+      const prodResponse = await axios.get(`${import.meta.env.VITE_SERVER}?producer=${developer}`);
       const prodGames = prodResponse.data;
 
       await minLoadingTime;
@@ -44,7 +44,7 @@ const Games = () => {
     const minLoadingTime = new Promise((resolve) => setTimeout(resolve, 1000));
 
     try {
-      const devResponse = await axios.get(`http://localhost:8080/api/v1/games?name=${name}`);
+      const devResponse = await axios.get(`${import.meta.env.VITE_SERVER}?name=${name}`);
       const devGames = devResponse.data;
 
       setGames([...devGames]);
@@ -62,7 +62,7 @@ const Games = () => {
     const minLoadingTime = new Promise((resolve) => setTimeout(resolve, 1000));
 
     try {
-      const devResponse = await axios.get(`http://localhost:8080/api/v1/games?genre=${genre}`);
+      const devResponse = await axios.get(`${import.meta.env.VITE_SERVER}?genre=${genre}`);
       const devGames = devResponse.data;
 
       setGames([...devGames]);

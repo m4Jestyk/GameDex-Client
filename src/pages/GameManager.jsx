@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
-import { Box, Text, useColorModeValue, Flex } from '@chakra-ui/react';
-import axios from 'axios';
-import ActionButtons from '../components/ActionButtons';
-import GameForm from '../components/GameForm';
-import DeleteForm from '../components/DeleteForm';
+import React, { useState } from "react";
+import { Box, Text, useColorModeValue, Flex, Button, Input } from "@chakra-ui/react";
+import axios from "axios";
+import ActionButtons from "../components/ActionButtons";
+import GameForm from "../components/GameForm";
+import DeleteForm from "../components/DeleteForm";
 
 const GameManager = () => {
   const [loading, setLoading] = useState(false);
@@ -16,13 +16,16 @@ const GameManager = () => {
     developer: "",
     date: "",
     operating_system: "",
-    genre: ""
+    genre: "",
   });
-  
+
   const [gameId, setGameId] = useState("");
 
-  const bgGradient = useColorModeValue('linear(to-r, gray.200, gray.300)', 'linear(to-r, gray.800, gray.900)');
-  const textColor = useColorModeValue('black', 'white');
+  const bgGradient = useColorModeValue(
+    "linear(to-r, gray.200, gray.300)",
+    "linear(to-r, gray.800, gray.900)"
+  );
+  const textColor = useColorModeValue("black", "white");
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -32,8 +35,16 @@ const GameManager = () => {
   const addGame = async () => {
     setLoading(true);
     try {
-      await axios.post('http://localhost:8080/api/v1/games', game);
+      await axios.post(`${import.meta.env.VITE_SERVER}/addgame`, game);
       setMessage("Game added successfully!");
+      setGame({
+        name: "",
+        producer: "",
+        developer: "",
+        date: "",
+        operating_system: "",
+        genre: "",
+      }); 
     } catch (error) {
       setMessage("Error adding game.");
     } finally {
@@ -41,12 +52,50 @@ const GameManager = () => {
     }
   };
 
-  const updateGame = async () => {
+  const fetchGameById = async (id) => {
     setLoading(true);
     try {
-      await axios.put(`http://localhost:8080/api/v1/games/${gameId}`, game);
-      setMessage("Game updated successfully!");
+      const response = await axios.get(`${import.meta.env.VITE_SERVER}/${id}`);
+      setGame(response.data); 
+      setMessage(`Game with ID ${id} fetched successfully!`);
     } catch (error) {
+      setMessage("Error fetching game.");
+      setGame({
+        name:"",
+        producer:"",
+        developer:"",
+        date:"",
+        operating_system:"",
+        genre:""
+      })
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const updateGame = async () => {
+    if (!gameId) {
+      setMessage("Please enter a valid game ID to update.");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      await axios.put(`${import.meta.env.VITE_SERVER}`, {
+        gameId,
+        ...game
+      });
+      setMessage("Game updated successfully!");
+      setGame({
+        name: "",
+        producer: "",
+        developer: "",
+        date: "",
+        operating_system: "",
+        genre: "",
+      });
+    } catch (error) {
+      console.log(error);
       setMessage("Error updating game.");
     } finally {
       setLoading(false);
@@ -56,10 +105,12 @@ const GameManager = () => {
   const deleteGame = async () => {
     setLoading(true);
     try {
-      await axios.delete(`http://localhost:8080/api/v1/games/${gameId}`);
+      await axios.delete(`${import.meta.env.VITE_SERVER}/${gameId}`);
       setMessage("Game deleted successfully!");
+
     } catch (error) {
       setMessage("Error deleting game.");
+      setGameId("");
     } finally {
       setLoading(false);
     }
@@ -67,11 +118,15 @@ const GameManager = () => {
 
   return (
     <Box p={8} minH="100vh" bgGradient={bgGradient} color={textColor}>
-      {/* Action Buttons */}
       <ActionButtons setActiveForm={setActiveForm} />
 
-      {/* Add Game Form */}
-      {activeForm === 'add' && (
+      {message && (
+        <Flex justify="center" align="center" mt={8}>
+          <Text fontSize={{ base: "md", md: "lg" }}>{message}</Text>
+        </Flex>
+      )}
+
+      {activeForm === "add" && (
         <GameForm
           game={game}
           handleInputChange={handleInputChange}
@@ -81,32 +136,45 @@ const GameManager = () => {
         />
       )}
 
-      {/* Update Game Form */}
-      {activeForm === 'update' && (
-        <GameForm
-          game={game}
-          handleInputChange={handleInputChange}
-          submitAction={updateGame}
-          loading={loading}
-          formTitle="Update Game"
-        />
+      {activeForm === "update" && (
+        <>
+          {/* Input field for entering Game ID */}
+          <Flex justify="center" align="center" mt={4}>
+            <Input
+              placeholder="Enter Game ID"
+              value={gameId}
+              onChange={(e) => setGameId(e.target.value)}
+              w="300px"
+              mr={2}
+            />
+            <Button
+              onClick={() => fetchGameById(gameId)}
+              isLoading={loading}
+              colorScheme="blue"
+            >
+              Fetch Game
+            </Button>
+          </Flex>
+
+          {gameId && (
+            <GameForm
+              game={game}
+              handleInputChange={handleInputChange}
+              submitAction={updateGame}
+              loading={loading}
+              formTitle="Update Game"
+            />
+          )}
+        </>
       )}
 
-      {/* Delete Game Form */}
-      {activeForm === 'delete' && (
+      {activeForm === "delete" && (
         <DeleteForm
           gameId={gameId}
           setGameId={setGameId}
           deleteAction={deleteGame}
           loading={loading}
         />
-      )}
-
-      {/* Display messages */}
-      {message && (
-        <Flex justify="center" align="center" mt={8}>
-          <Text fontSize={{ base: 'md', md: 'lg' }}>{message}</Text>
-        </Flex>
       )}
     </Box>
   );

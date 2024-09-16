@@ -9,14 +9,22 @@ import Genre from "./pages/Genre"
 import Retro from "./pages/Retro"
 import Custom from "./pages/Custom"
 import GameManager from "./pages/GameManager"
+import { useSelector } from "react-redux"
+import ApiTest from "./components/ApiTest"
+import LearnMore from "./pages/LearnMore"
 
 
 function App() {
+
+  const isAdmin = useSelector((state) => state.admin.isAdmin);
+
   return (
     <BrowserRouter>
       <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/test" element={<ApiTest/>}/>
+        <Route path="/about" element={<LearnMore/>}/>
         <Route path="/category" element={<Category />} />
               <Route path="/category/developer" element={<Developer />} />
                     <Route path="/category/developer/result" element={<Games/>}/>
@@ -26,7 +34,8 @@ function App() {
                     <Route path="/category/genre/result" element={<Games/>}/>
               <Route path="/category/retro" element={<Retro/>}/>
               <Route path="/category/customfind" element={<Custom/>}/>
-              <Route path="/manager" element={<GameManager/>}/>
+              <Route path="/manager" element={isAdmin ? <GameManager/> : <Category/>}/>
+
       </Routes>
     </BrowserRouter>
   )

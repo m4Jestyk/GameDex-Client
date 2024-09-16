@@ -3,7 +3,6 @@
 import {
   Box,
   Flex,
-  Avatar,
   Button,
   Menu,
   MenuButton,
@@ -15,61 +14,103 @@ import {
   Stack,
   useColorMode,
   Center,
+  Input,
+  Container,
 } from '@chakra-ui/react';
 import { MoonIcon, SunIcon } from '@chakra-ui/icons';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { setAdmin } from '../redux/slices/adminSlice';
+import { useState } from 'react';
+import axios from 'axios';
 
 export default function Navbar() {
   const { colorMode, toggleColorMode } = useColorMode();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const isAdmin = useSelector((state) => state.admin.isAdmin);
+  const adminText = isAdmin ? "Logged in" : "Logged out";
+
+  const [id, setId] = useState("");
+  const [pw, setPw] = useState("");
+
+  const handleLogin = async() => {
+    const res = await axios.post(`${import.meta.env.VITE_SERVER}/auth`, {
+      userId: id,
+      password: pw,
+      envId: import.meta.env.VITE_ID,
+      envPw: import.meta.env.VITE_PASSWORD,
+    });
+
+    const data = res.data;
+    if(data === true) {
+      dispatch(setAdmin(true));
+    } else {
+      console.log("Wrong credentials");
+    }
+  }
+
+  const handleLogout = () => {
+    dispatch(setAdmin(false));
+    navigate("/");
+  }
 
   return (
     <>
       <Box bg={useColorModeValue('gray.100', 'gray.900')} px={4}>
-        <Flex h={16} alignItems={'center'} justifyContent={'space-between'}>
-          <Box onClick={() => navigate("/")} cursor={'pointer'}>GameDex</Box>
+        <Container maxW="container.xl">
+          <Flex h={16} alignItems={'center'} justifyContent={'space-between'} flexDir={{ base: 'column', md: 'row' }}>
 
-          <Flex alignItems={'center'}>
-            <Stack direction={'row'} spacing={7}>
-              <Button onClick={toggleColorMode}>
-                {colorMode === 'light' ? <MoonIcon /> : <SunIcon />}
-              </Button>
+            <Box onClick={() => navigate("/")} cursor={'pointer'} fontSize={{ base: 'lg', md: 'xl' }} mb={{ base: 4, md: 0 }}>
+              GameDex
+            </Box>
 
-              <Menu>
-                <MenuButton
-                  as={Button}
-                  rounded={'full'}
-                  variant={'link'}
-                  cursor={'pointer'}
-                  minW={0}>
-                  <Avatar
-                    size={'sm'}
-                    src={'https://avatars.dicebear.com/api/male/username.svg'}
-                  />
-                </MenuButton>
-                <MenuList alignItems={'center'}>
-                  <br />
-                  <Center>
-                    <Avatar
-                      size={'2xl'}
-                      src={'https://avatars.dicebear.com/api/male/username.svg'}
-                    />
-                  </Center>
-                  <br />
-                  <Center>
-                    <p>Username</p>
-                  </Center>
-                  <br />
-                  <MenuDivider />
-                  <MenuItem>Your Servers</MenuItem>
-                  <MenuItem>Account Settings</MenuItem>
-                  <MenuItem>Logout</MenuItem>
-                </MenuList>
-              </Menu>
-            </Stack>
+            <Flex alignItems={'center'} flexDir={{ base: 'column', md: 'row' }}>
+              <Stack direction={'row'} spacing={7} alignItems={'center'}>
+                <Button onClick={toggleColorMode}>
+                  {colorMode === 'light' ? <MoonIcon /> : <SunIcon />}
+                </Button>
+
+                {/* Responsive Admin Menu */}
+                <Menu>
+                  <MenuButton as={Button} 
+                    variant={'link'} 
+                    width={{ base: 'full', md: 'auto' }} 
+                    textAlign={{ base: 'center', md: 'left' }}
+                  >
+                    {isAdmin ? `` : `Enter`} Admin {isAdmin ? `Centre` : `Mode`}
+                  </MenuButton>
+
+                  <MenuList alignItems={'center'}>
+                    <Center py={2}>
+                      <p>{adminText}</p>
+                    </Center>
+                    <MenuDivider />
+                    {isAdmin ? (
+                      <Button onClick={() => navigate("/manager")} w="full" mb={2}>Control Panel</Button>
+                    ) : (
+                      <Container>
+                        <Flex m={'5px'} onChange={(e) => setId(e.target.value)}>
+                          <Input placeholder='Id' />
+                        </Flex>
+                        <Flex m={'5px'} onChange={(e) => setPw(e.target.value)}>
+                          <Input placeholder='Password' type='password' />
+                        </Flex>
+                      </Container>
+                    )}
+                    {isAdmin ? (
+                      <MenuItem onClick={handleLogout}>Logout</MenuItem>
+                    ) : (
+                      <MenuItem onClick={handleLogin}>Login</MenuItem>
+                    )}
+                  </MenuList>
+                </Menu>
+              </Stack>
+            </Flex>
+
           </Flex>
-        </Flex>
+        </Container>
       </Box>
     </>
   );

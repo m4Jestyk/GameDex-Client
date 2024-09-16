@@ -1,6 +1,6 @@
 import { Box, Flex, Text, Stack, useColorModeValue } from '@chakra-ui/react';
 import React from 'react';
-import '@fontsource/press-start-2p'; // Import the retro game font
+import '@fontsource/press-start-2p';
 
 const Game = (props) => {
   const cardBg = useColorModeValue('linear-gradient(135deg, #1e1e1e, #444444)', 'linear-gradient(135deg, #1f1c2c, #928dab)');

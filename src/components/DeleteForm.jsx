@@ -2,7 +2,7 @@ import { Box, FormControl, FormLabel, Input, Button, Heading } from '@chakra-ui/
 import { useColorModeValue } from '@chakra-ui/react';
 
 const DeleteForm = ({ gameId, setGameId, deleteAction, loading }) => {
-  const cardBg = useColorModeValue('gray.100', 'gray.700'); // Background color based on theme
+  const cardBg = useColorModeValue('gray.100', 'gray.700'); 
 
   return (
     <Box p={4} bg={cardBg} borderRadius="lg" boxShadow="lg" mt={4}>

@@ -54,7 +54,7 @@ export default function Home() {
               onClick={() => navigate("/category")}>
               Get Started
             </Button>
-            <Button variant={'link'} colorScheme={'blue'} size={'sm'}>
+            <Button onClick={() => navigate("/about")} variant={'link'} colorScheme={'blue'} size={'sm'}>
               Learn more
             </Button>
           </Stack>
